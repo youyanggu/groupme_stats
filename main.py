@@ -1,9 +1,63 @@
 import json
 import requests
 import datetime
+import csv
 
 url = 'https://api.groupme.com/v3'
 token = '?token=904f53d0e88801316f9a729b72f3445b'
+
+def getOccurances(word, once=True, print_matches=False, match_exactly=False):
+	def getNum(user, original_text):
+		count = 0
+		if original_text is None:
+			return 0
+		else:
+			text = original_text.lower()
+			if type(word) == list:
+				for w in word:
+					if match_exactly:
+						if text == w: count = 1
+					else:
+						count += text.count(w)
+			else:
+				if match_exactly:
+					if word == text: count = 1
+				else:
+					count = text.count(word)
+			if print_matches and count > 0:
+				print user, ':', original_text
+			if once:
+				return min(count, 1)
+			else:
+				return count
+	return getNum
+
+def capital(user, text):
+	if text is None:
+		return 0
+	capital_count = sum(1 for c in text if c.isupper())
+	print text
+	return (capital_count, len(text))
+
+def numWords(user, text):
+	return len(text.split())
+
+def numChars(user, text):
+	return len(text)
+
+def readCsv(file, func):
+	f = open(file, 'rb')
+	reader = csv.reader(f)
+	count = 0
+	d = {}
+	for row in reader:
+		user = row[0]
+		text = row[1]
+		if user not in d:
+			d[user] = []
+		data = func(user, text)
+		d[user].append(data)
+	return d
 
 def get(response):
 	return response.json()['response']
@@ -63,9 +117,29 @@ def getStrLen(msg):
 def getNumFavorited(msg):
 	num_favorited = msg['favorited_by']
 	return len(num_favorited)
+
+def getNumOfOccurances(word, once=True):
+	def getNumOfLol(msg):
+		text = msg['text']
+		count = 0
+		if text is None:
+			return 0
+		else:
+			text = text.lower()
+			if type(word) == list:
+				for w in word:
+					count += text.count(w)
+			else:
+				count = text.count(word)
+			if once:
+				return min(count, 1)
+			else:
+				return count
+	return getNumOfLol
+
 ####################################
 
-def getStats(data, ignoreGroupMe=True, total=False):
+def getStats(data, ignoreGroupMe=True, total=True, percent=True, compact=True):
 	l = []
 	num_people = total_msgs = total_data_per_person = total_data = 0
 	for k,v in data.iteritems():
@@ -77,22 +151,31 @@ def getStats(data, ignoreGroupMe=True, total=False):
 		total_data_per_person = sum(v)
 		total_data += total_data_per_person
 		if total:
-			l.append((str(k), num_msgs, total_data_per_person))
+			if percent:
+				l.append((str(k), num_msgs, total_data_per_person, 
+					str(round(total_data_per_person * 100.0 / num_msgs, 1))+'%'))
+			else:
+				l.append((str(k), num_msgs, total_data_per_person))
 		else:
 			avg_data_len = 0
 			if num_msgs != 0:
 				avg_data_len = round(sum(v)*1.0 / num_msgs, 1)
 			l.append((str(k), num_msgs, avg_data_len))
-	l = sorted(l, key=lambda k:k[1], reverse=True)
-	if total:
-		l.append(('Average', round(total_msgs * 1.0 / num_people, 1), round(total_data * 1.0 / num_people, 1)))
-		l.append(('Total', total_msgs, total_data))
-	else:
-		l.append(('Average', round(total_msgs * 1.0 / num_people, 1), round(total_data * 1.0 / total_msgs, 1)))
-		l.append(('Total', total_msgs))
+	l = sorted(l, key=lambda k:k[2], reverse=True)
+#	if total:
+#		l.append(('Average', round(total_msgs * 1.0 / num_people, 1), round(total_data * 1.0 / num_people, 1)))
+#		l.append(('Total', total_msgs, total_data))
+#	else:
+#		l.append(('Average', round(total_msgs * 1.0 / num_people, 1), round(total_data * 1.0 / total_msgs, 1)))
+#		l.append(('Total', total_msgs))
+	if compact:
+		return [(x[0],x[2]) for x in l]
 	return l
 
-def countMsgs(group_id, processTextFunc=getStrLen, sinceTs=None):
+def countMsgs(group_id, processTextFunc=None, sinceTs=None, csv_file=None):
+	if csv_file:
+		f = open(csv_file, "wb")
+		wr = csv.writer(f, dialect="excel")
 	if type(sinceTs) == datetime.datetime:
 		sinceTs = int(sinceTs.strftime("%s"))
 	totalCount = getGroupCount(group_id)
@@ -109,27 +192,32 @@ def countMsgs(group_id, processTextFunc=getStrLen, sinceTs=None):
 				return users
 			curCount += 1
 			user = msg['name']
+			text = msg['text']
 			if user not in users:
 				users[user] = []
-			else:
+			if csv and text != None:
+				wr.writerow([user.encode('utf-8'), text.encode('utf-8')])
+			if processTextFunc is not None:
 				data = processTextFunc(msg)
 				users[user].append(data)
 		lastMsgId = msgs['messages'][-1]['id']
 	return users
 
-groups = getGroups()
-sorted_groups = sortByCount(groups)
-bball_id = groups['Bball']['id']
-traders_id = groups['Traders']['id']
-tx_id = groups['TXec \'13-\'14']['id']
+if __name__ == "__main__":
+	groups = getGroups()
+	sorted_groups = sortByCount(groups)
+	bball_id = groups['Bball']['id']
+	traders_id = groups['Traders']['id']
+	tx_id = groups['TXec \'13-\'14']['id']
 
-#dt = datetime.datetime(2014, 5, 23)
-#bball_data_since = countMsgs(bball_id, sinceTs=dt)
-traders_data = countMsgs(traders_id, getNumFavorited)
-tx_data = countMsgs(tx_id, getNumFavorited)
+	words = ['fuck', 'shit', 'bitch']
+	#dt = datetime.datetime(2014, 5, 23)
+	#bball_data = countMsgs(bball_id, getNumOfOccurances('gg'), csv_file='bball.csv')
+	traders_data = countMsgs(traders_id, csv_file='traders.csv')
+	tx_data = countMsgs(tx_id, csv_file='tx.csv')
 
-#for data in [data_since, traders_data, tx_data]:
-#	print getStats(data)
+	#for data in [data_since, traders_data, tx_data]:
+	#	print getStats(data)
 
-
+	results = readCsv('bball.csv', getOccurances(words, print_matches=True, match_exactly=True))
 
