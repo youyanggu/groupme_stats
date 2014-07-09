@@ -4,7 +4,7 @@ import datetime
 import csv
 
 url = 'https://api.groupme.com/v3'
-token = '?token=904f53d0e88801316f9a729b72f3445b'
+
 
 def getOccurances(word, once=True, print_matches=False, match_exactly=False):
 	def getNum(user, original_text):
