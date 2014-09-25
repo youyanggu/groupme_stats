@@ -137,7 +137,11 @@ def countMsgs(group_id, csv_file=None, processTextFunc=None, sinceTs=None):
 			user = msg['name']
 			text = msg['text']
 			if text is None:
-				text == ""
+				text = ""
+			if user is None:
+				user = ""
+			if created_at is None:
+				created_at = ""
 			if user not in users:
 				users[user] = []
 			if csv_file:
