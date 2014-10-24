@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(description='Tool to retrieve GroupMe messages 
 parser.add_argument('token', help='Access token used to authenticate yourself when making API requests.')
 parser.add_argument('-a', '--all', help='Retrieve all groups', action="store_true")
 parser.add_argument('-g', '--group', help='Name of group to retrieve. Run without this flag to see list of groups.')
-parser.add_argument('-c', '--csv', help='Name of csv file to write to.')
+parser.add_argument('-c', '--csv', help='Name of csv file to write to.', default='temp.csv')
 parser.add_argument('-o', '--overwrite', help='overwrite csv file', action="store_true")
 
 URL = 'https://api.groupme.com/v3'
@@ -49,7 +49,7 @@ group id and # of messages as values
 """
 def getGroups():
 	params = {'per_page' : 100}
-	groups = get(requests.get(URL + '/groups/' + TOKEN, params=params))
+	groups = get(requests.get(URL + '/groups' + TOKEN, params=params))
 	if groups is None:
 		return None
 	d = {}

@@ -19,7 +19,7 @@ parser.add_argument('--count_dups', help='count multiple instances in same messa
 	action="store_true", default=False)
 parser.add_argument('--match_exactly', help='the message must match the phrase exactly', 
 	action="store_true", default=False)
-parser.add_argument('--print_user', help='when print_matches is true, only print the matches by this user')
+parser.add_argument('--print_user', help='print all matches by this user')
 
 # Arguments for showStats
 parser.add_argument('--include_groupme', help='include messages sent by GroupMe', 
@@ -59,9 +59,8 @@ def getOccurances(phrase, count_dups=False, print_matches=False, match_exactly=F
 					if phrase == text: count = 1
 				else:
 					count = text.count(phrase)
-			if print_matches and count > 0:
-				if print_user is None or print_user == user:
-					print user, ':', original_text
+			if count > 0 and (print_matches or print_user == user):
+				print user, ':', original_text
 			if count_dups:
 				return min(count, 1)
 			else:
@@ -76,7 +75,7 @@ def numChars(user, text):
 
 """ Reads the CSV file and passes the content to process_msg_func """
 def readCsv(file, process_msg_func=None):
-	f = open(file, 'rb')
+	f = open(file, 'rU')
 	reader = csv.reader(f)
 	count = 0
 	d = {}
