@@ -179,8 +179,8 @@ def main(retrieve_all, group, csv_file, overwrite):
 if __name__ == "__main__":
 	args = parser.parse_args()
 	token = args.token
-	if len(token) != 32:
-		raise IOError("Invalid token. Please enter a 32-char string.")
+	if len(token) != 40:
+		raise IOError("Invalid token. Please enter a 40-char string.")
 	TOKEN = "?token=" + token
 
 	main(args.all, args.group, args.csv, args.overwrite)

@@ -12,11 +12,11 @@ Example usage:
 
 Getting Access Token
 --------------
-In order to download GroupMe messages, you need an unique access token provided to you by GroupMe. To get this, log into GroupMe's <a href="https://dev.groupme.com" target="_blank">Developers</a> website and create a sample Application. You should then be given a 32-bit access token.
+In order to download GroupMe messages, you need an unique access token provided to you by GroupMe. To get this, log into GroupMe's <a href="https://dev.groupme.com" target="_blank">Developers</a> website and click Access Token. You should then be given a 40 character long access token.
 
 Dependencies
 --------------
-You need to install Python's <a href="http://docs.python-requests.org/en/latest/" target="_blank">request</a> library: ```pip install request```
+You need to install Python's <a href="http://docs.python-requests.org/en/latest/" target="_blank">request</a> library: ```pip install requests```
 
 Instructions
 --------------
