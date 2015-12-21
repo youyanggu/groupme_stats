@@ -16,10 +16,11 @@ In order to download GroupMe messages, you need an unique access token provided 
 
 Dependencies
 --------------
-You need to install Python's <a href="http://docs.python-requests.org/en/latest/" target="_blank">request</a> library: ```pip install requests```
+You might need to install Python's <a href="http://docs.python-requests.org/en/latest/" target="_blank">request</a> library: ```pip install requests```
 
 Instructions
 --------------
 1. Get your GroupMe Access Token using the instructions above.
-2. Run ```retrieve_msgs.py```, pass in your access token, and follow the command line interface to download your GroupMe messages to a CSV file.
-3. Run ```run_stats.py``` and pass in your CSV file to display some simple stats about your messages.
+2. Run ```python retrieve_msgs.py```, pass in your access token, and follow the command line interface to download your GroupMe messages to a CSV file. Use ```python retrieve_msgs.py --help``` to see a list of commands.
+  - For example: ```python retrieve_msgs.py <YOUR ACCESS TOKEN> -a -c output.csv``` will output all of your messages into a csv file called output.csv.
+3. Run ```python run_stats.py``` and pass in your CSV file to display some simple stats about your messages. Use ```python run_stats.py --help``` to see a list of commands. For example: ```python run_stats.py output.csv``` will simply give you the number of messages sent by each individual.
