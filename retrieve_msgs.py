@@ -1,4 +1,4 @@
-""" 
+"""
 @author: youyanggu
 
 Tool to retrieve GroupMe messages using the GroupMe API and output them to a CSV file.
@@ -31,20 +31,20 @@ def getNumFavorited(msg):
 
 ####################################
 
-	
+
 ##########################
 #
 # GROUPME API Helper Functions
-# 
+#
 ##########################
 
 """ Retrieve the 'response' portion of the json object """
 def get(response):
 	return response.json()['response']
 
-""" 
-Returns a dictionary with group names as keys and a dictionary of 
-group id and # of messages as values 
+"""
+Returns a dictionary with group names as keys and a dictionary of
+group id and # of messages as values
 
 """
 def getGroups():
@@ -54,7 +54,7 @@ def getGroups():
 		return None
 	d = {}
 	for group in groups:
-		name = str(group['name'])
+		name = str(group['name'].encode('utf-8').strip())
 		count = group['messages']['count']
 		if count > 0:
 			d[name] = {}
@@ -86,7 +86,7 @@ def sortByCount(groups):
 def getLastMsgId(group_id):
 	return getGroup(group_id)['messages']['last_message_id']
 
-""" 
+"""
 Given the group_id and the message_id, retrieves 20 messages
 
 Params:
@@ -156,7 +156,7 @@ def main(retrieve_all, group, csv_file, overwrite):
 	groups = getGroups()
 	if groups is None:
 		raise RuntimeError("Cannot retrieve groups. Is your token correct?")
-		
+
 	if retrieve_all:
 		for k, v in groups.iteritems():
 			csv_file = k+'.csv'
