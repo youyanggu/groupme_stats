@@ -21,6 +21,11 @@ You might need to install Python's <a href="http://docs.python-requests.org/en/l
 Instructions
 --------------
 1. Get your GroupMe Access Token using the instructions above.
-2. Run ```python retrieve_msgs.py```, pass in your access token, and follow the command line interface to download your GroupMe messages to a CSV file. Use ```python retrieve_msgs.py --help``` to see a list of commands.
-  - For example: ```python retrieve_msgs.py <YOUR ACCESS TOKEN> -a -c output.csv``` will output all of your messages into a csv file called output.csv.
+2. Run ```python retrieve_msgs.py```, pass in your access token, and follow the command line interface to download your GroupMe messages to a CSV file. Use ```python retrieve_msgs.py --help``` to see a list of commands. Below are some sample usages:
+  - ```python retrieve_msgs.py <YOUR ACCESS TOKEN> -a -c output.csv``` will output all of your GROUP messages into a csv file called output.csv.
+  - ```python retrieve_msgs.py <YOUR ACCESS TOKEN> -g "Beer League Hockey"``` will output your GROUP messages from the Beer League Hockey group into a csv file called beer_league_hockey.csv.
+  - ```python retrieve_msgs.py <YOUR ACCESS TOKEN> -d -a``` will output all of your DIRECT MESSAGES into a separate csv file for each person.
+  - ```python retrieve_msgs.py <YOUR ACCESS TOKEN> -d -g "Jennifer Lawrence" -c jlaw.csv``` will output your DIRECT MESSAGES from Jennifer Lawrence into a csv file called jlaw.csv.
 3. Run ```python run_stats.py``` and pass in your CSV file to display some simple stats about your messages. Use ```python run_stats.py --help``` to see a list of commands. For example: ```python run_stats.py output.csv``` will simply give you the number of messages sent by each individual.
+
+If you run into any issues running this, let me know via the "Issues" tab. Some of the code is not fully tested so please file a bug report if an error occurs and I will try to address it!
