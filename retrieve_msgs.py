@@ -209,7 +209,7 @@ def main(retrieve_all, direct_msgs, group_name, csv_file, overwrite):
 			count, _ = countMsgs(k, v['id'], direct_msgs, csv_file=new_csv_file)
 			print "Processed {} messages. Wrote to {}.".format(count, csv_file)
 	elif group_name:
-		if group not in groups:
+		if group_name not in groups:
 			print "Group name not found. Here are the list of groups:"
 			print getGroupNames(groups)
 		else:
