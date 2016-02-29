@@ -12,7 +12,7 @@ import argparse
 parser = argparse.ArgumentParser(description='Tool to show simple stats of GroupMe messages.')
 parser.add_argument('csv_file', help='CSV file to read messages from. Outputted by retrieve_msgs.py.')
 # Arguments for getOccurances
-parser.add_argument('-p', '--pharse', help='Find phrase(s)', nargs='+')
+parser.add_argument('-p', '--phrase', help='Find phrase(s)', nargs='+')
 parser.add_argument('--print_matches', help='print all occurances of phrase', 
 	action="store_true", default=False)
 parser.add_argument('--count_dups', help='count multiple instances in same message', 
@@ -74,17 +74,18 @@ def numChars(user, text):
 	return len(text)
 
 """ Reads the CSV file and passes the content to process_msg_func """
-def readCsv(file, process_msg_func=None):
-	f = open(file, 'rU')
+def readCsv(fname, process_msg_func=None):
+	f = open(fname, 'rU')
 	reader = csv.reader(f)
 	count = 0
 	d = {}
 	for row in reader:
 		if len(row) < 3:
 			raise IOError("CSV file missing columns.")
-		timestamp = row[0]
-		user = row[1]
-		text = row[2]
+		group_name = row[0]
+		timestamp = row[1]
+		user = row[2]
+		text = row[3]
 		if user not in d:
 			d[user] = []
 		if process_msg_func is None:
@@ -95,8 +96,8 @@ def readCsv(file, process_msg_func=None):
 	return d
 
 """ Helper function that calls readCsv and getStats """
-def showStats(file, func=None, **kwargs):
-	result = readCsv(file, func)
+def showStats(fname, func=None, **kwargs):
+	result = readCsv(fname, func)
 	return getStats(result, **kwargs)
 
 """ 
@@ -148,9 +149,9 @@ def getStats(data, include_groupme=False, total=True, percent=True, compact=True
 if __name__ == "__main__":
 	args = parser.parse_args()
 	csv_file = args.csv_file
-	if args.pharse:
+	if args.phrase:
 		result = readCsv(csv_file, getOccurances(
-								  args.pharse, 
+								  args.phrase, 
 								  print_matches=args.print_matches,
 								  count_dups=args.count_dups,
 								  match_exactly=args.match_exactly,
