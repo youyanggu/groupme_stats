@@ -16,7 +16,7 @@ In order to download GroupMe messages, you need an unique access token provided 
 
 Dependencies
 --------------
-You might need to install Python's <a href="http://docs.python-requests.org/en/latest/" target="_blank">request</a> library: ```pip install requests```
+You might need to install Python's <a href="http://docs.python-requests.org/en/latest/" target="_blank">requests</a> library: ```pip install requests```
 
 Instructions
 --------------

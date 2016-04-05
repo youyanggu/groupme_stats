@@ -174,7 +174,11 @@ def countMsgs(group_name, group_id, direct_msgs, csv_file=None, processTextFunc=
 			if msg['created_at'] < sinceTs:
 				return curCount, users
 			curCount += 1
-			created_at = datetime.datetime.fromtimestamp(msg['created_at']).strftime('%Y-%m-%d %H:%M:%S')
+			try:
+				created_at = datetime.datetime.fromtimestamp(msg['created_at']).strftime('%Y-%m-%d %H:%M:%S')
+			except:
+				print "Error parsing created_at"
+				created_at = ""
 			user = msg['name']
 			text = msg['text']
 			if text is None:
