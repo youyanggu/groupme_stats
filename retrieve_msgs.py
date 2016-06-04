@@ -231,8 +231,8 @@ def main(retrieve_all, direct_msgs, group_name, csv_file, overwrite):
 if __name__ == "__main__":
 	args = parser.parse_args()
 	token = args.token
-	if len(token) != 40:
-		raise IOError("Invalid token. Please enter a 40-char string.")
+	if len(token) not in [32, 40]:
+		raise IOError("Invalid token. Please enter a 32-char or 40-char string.")
 	TOKEN = "?token=" + token
 
 	main(args.all, args.dm, args.group, args.csv, args.overwrite)
