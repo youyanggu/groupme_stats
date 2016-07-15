@@ -20,6 +20,7 @@ parser.add_argument('--count_dups', help='count multiple instances in same messa
 parser.add_argument('--match_exactly', help='the message must match the phrase exactly', 
 	action="store_true", default=False)
 parser.add_argument('--print_user', help='print all matches by this user')
+parser.add_argument('--popular', help='print the 25 most popular messages')
 
 # Arguments for showStats
 parser.add_argument('--include_groupme', help='include messages sent by GroupMe', 
