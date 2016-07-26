@@ -21,6 +21,7 @@ parser.add_argument('--match_exactly', help='the message must match the phrase e
 	action="store_true", default=False)
 parser.add_argument('--print_user', help='print all matches by this user')
 
+
 # Arguments for showStats
 parser.add_argument('--include_groupme', help='include messages sent by GroupMe', 
 	action="store_true", default=False)
