@@ -151,7 +151,7 @@ def countMsgs(group_name, group_id, direct_msgs, csv_file=None, processTextFunc=
 	sinceTs: only process messages after this timestamp
 	"""
 	if csv_file:
-		f = open(csv_file, "a")
+		f = open(csv_file, "ab")
 		wr = csv.writer(f, dialect="excel")
 	if type(sinceTs) == datetime.datetime:
 		sinceTs = int(sinceTs.strftime("%s"))
