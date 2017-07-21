@@ -136,7 +136,7 @@ def getMessages(group_id, direct_msgs, before_id=None, since_id=None):
 			msgs = get(requests.get(URL + '/direct_messages' + TOKEN, params=params))
 		else:
 			msgs = get(requests.get(URL + '/groups/' + group_id + '/messages' + TOKEN, params=params))
-			
+
 	except ValueError:
 		return []
 	return msgs
@@ -171,6 +171,8 @@ def countMsgs(group_name, group_id, direct_msgs, csv_file=None, processTextFunc=
 			msgs = msgs['direct_messages']
 		else:
 			msgs = msgs['messages']
+		if not msgs:
+			break
 		for msg in msgs:
 			if msg['created_at'] < sinceTs:
 				return curCount, users
